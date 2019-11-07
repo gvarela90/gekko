@@ -2,6 +2,8 @@ node_modules
 .travis.yml
 volumes
 config.js
+baseConfig.js
 sample-config.js
 .git
 .gitignore
+gekko-strategies-repo

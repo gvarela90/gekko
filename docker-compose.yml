@@ -5,19 +5,21 @@ services:
     volumes:
       - ./volumes/gekko/history:/usr/src/app/history
       - ./config.js:/usr/src/app/config.js
+      - ./baseConfig.js:/usr/src/app/web/routes/baseConfig.js
+
     links:
       - redis
-#      - postgresql
-    environment:
-     - HOST
-     - PORT
+    #      - postgresql
+    # environment:
+    #  - HOST
+    # - PORT
     ports: # you can comment this out when using the nginx frontend
-      - "${PORT}:${PORT}"
-## optionally set nginx vars if you wish to frontend it with nginx
-#    environment:
-#     - VIRTUAL_HOST=gekko
-#     - PORT=3000
-#     - DOMAIN=gekko
+      - '3000:3000'
+  ## optionally set nginx vars if you wish to frontend it with nginx
+  #    environment:
+  #     - VIRTUAL_HOST=gekko
+  #     - PORT=3000
+  #     - DOMAIN=gekko
 
   redis:
     image: redis:latest

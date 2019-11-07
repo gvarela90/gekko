@@ -19,13 +19,13 @@ var _args = false;
 var util = {
   getConfig: function() {
     // cache
-    if(_config)
-      return _config;
+    if (_config) return _config;
 
-    if(!program.config)
-        util.die('Please specify a config file.', true);
+    if (!program.config) util.die('Please specify a config file.', true);
 
-    if(!fs.existsSync(util.dirs().gekko + program.config))
+    var configFile = util.dirs().gekko + program.config;
+    console.log(configFile);
+    if (!fs.existsSync(configFile))
       util.die('Cannot find the specified config file.', true);
 
     _config = require(util.dirs().gekko + program.config);
@@ -36,20 +36,18 @@ var util = {
     _config = config;
   },
   setConfigProperty: function(parent, key, value) {
-    if(parent)
-      _config[parent][key] = value;
-    else
-      _config[key] = value;
+    if (parent) _config[parent][key] = value;
+    else _config[key] = value;
   },
   getVersion: function() {
     return util.getPackage().version;
   },
   getPackage: function() {
-    if(_package)
-      return _package;
+    if (_package) return _package;
 
-
-    _package = JSON.parse( fs.readFileSync(__dirname + '/../package.json', 'utf8') );
+    _package = JSON.parse(
+      fs.readFileSync(__dirname + '/../package.json', 'utf8')
+    );
     return _package;
   },
   getRequiredNodeVersion: function() {
@@ -62,7 +60,7 @@ var util = {
   // check if two moments are corresponding
   // to the same time
   equals: function(a, b) {
-    return !(a < b || a > b)
+    return !(a < b || a > b);
   },
   minToMs: function(min) {
     return min * 60 * 1000;
@@ -70,23 +68,26 @@ var util = {
   defer: function(fn) {
     return function(args) {
       var args = _.toArray(arguments);
-      return _.defer(function() { fn.apply(this, args) });
-    }
+      return _.defer(function() {
+        fn.apply(this, args);
+      });
+    };
   },
   logVersion: function() {
-    return  `Gekko version: v${util.getVersion()}`
-    + `\nNodejs version: ${process.version}`;
+    return (
+      `Gekko version: v${util.getVersion()}` +
+      `\nNodejs version: ${process.version}`
+    );
   },
   die: function(m, soft) {
-
-    if(_gekkoEnv === 'child-process') {
-      return process.send({type: 'error', error: '\n ERROR: ' + m + '\n'});
+    if (_gekkoEnv === 'child-process') {
+      return process.send({ type: 'error', error: '\n ERROR: ' + m + '\n' });
     }
 
     var log = console.log.bind(console);
 
-    if(m) {
-      if(soft) {
+    if (m) {
+      if (soft) {
         log('\n ERROR: ' + m + '\n\n');
       } else {
         log(`\nGekko encountered an error and can\'t continue`);
@@ -116,14 +117,11 @@ var util = {
       workers: ROOT + 'core/workers/',
       web: ROOT + 'web/',
       config: ROOT + 'config/',
-      broker: ROOT + 'exchange/'
-    }
+      broker: ROOT + 'exchange/',
+    };
   },
   inherit: function(dest, source) {
-    require('util').inherits(
-      dest,
-      source
-    );
+    require('util').inherits(dest, source);
   },
   makeEventEmitter: function(dest) {
     util.inherit(dest, require('events').EventEmitter);
@@ -132,22 +130,14 @@ var util = {
     _gekkoMode = mode;
   },
   gekkoMode: function() {
-    if(_gekkoMode)
-      return _gekkoMode;
+    if (_gekkoMode) return _gekkoMode;
 
-    if(program['import'])
-      return 'importer';
-    else if(program.backtest)
-      return 'backtest';
-    else
-      return 'realtime';
+    if (program['import']) return 'importer';
+    else if (program.backtest) return 'backtest';
+    else return 'realtime';
   },
   gekkoModes: function() {
-    return [
-      'importer',
-      'backtest',
-      'realtime'
-    ]
+    return ['importer', 'backtest', 'realtime'];
   },
   setGekkoEnv: function(env) {
     _gekkoEnv = env;
@@ -156,15 +146,13 @@ var util = {
     return _gekkoEnv || 'standalone';
   },
   launchUI: function() {
-    if(program['ui'])
-      return true;
-    else
-      return false;
+    if (program['ui']) return true;
+    else return false;
   },
   getStartTime: function() {
     return startTime;
   },
-}
+};
 
 // NOTE: those options are only used
 // in stand alone mode
@@ -177,13 +165,16 @@ program
   .parse(process.argv);
 
 // make sure the current node version is recent enough
-if(!util.recentNode())
-  util.die([
-    'Your local version of Node.js is too old. ',
-    'You have ',
-    process.version,
-    ' and you need atleast ',
-    util.getRequiredNodeVersion()
-  ].join(''), true);
+if (!util.recentNode())
+  util.die(
+    [
+      'Your local version of Node.js is too old. ',
+      'You have ',
+      process.version,
+      ' and you need atleast ',
+      util.getRequiredNodeVersion(),
+    ].join(''),
+    true
+  );
 
 module.exports = util;
