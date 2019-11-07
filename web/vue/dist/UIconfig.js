@@ -13,8 +13,8 @@ const CONFIG = {
   },
   ui: {
     ssl: false,
-    host: `${process.env.DOMAIN || 'localhost'}`,
-    port: `${process.env.PORT || 3000}`,
+    host: 'localhost',
+    port: 3000,
     path: '/',
   },
   adapter: 'sqlite',
