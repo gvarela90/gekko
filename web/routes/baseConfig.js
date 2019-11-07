@@ -60,11 +60,10 @@ config.paperTrader = {
 // added
 config.slack = {
   enabled: true,
-  token:
-    'xoxp-123608068016-453028982224-826305826487-e15af899be1787f0d6adb55244ced344',
+  token: '',
   sendMessageOnStart: true,
   muteSoft: true,
-  channel: 'GQAKJTNJ2', // #tradebot
+  channel: '', // #tradebot
 };
 
 config.candleWriter = {
